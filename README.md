@@ -27,3 +27,6 @@ Githubのビューアー
 バージョン: 4.1.1
 
 ## SDK version
+
+## 計画シート(ガントチャート)
+https://docs.google.com/spreadsheets/d/1Iyg9MqOpbCB-M9I8xl_eK_Hl_6-cenEaF3P9i4T_fzA/edit#gid=939584517
