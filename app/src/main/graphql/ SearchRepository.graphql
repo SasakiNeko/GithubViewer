@@ -1,0 +1,15 @@
+query SearchRepository($repositoryName: String!, $after: String) {
+    search(query: $repositoryName, type: REPOSITORY, first: 30, after: $after) {
+        repositoryCount
+        edges {
+            cursor
+            node {
+                __typename
+                ... on Repository {
+                    nameWithOwner
+                    url
+                }
+            }
+        }
+    }
+}
