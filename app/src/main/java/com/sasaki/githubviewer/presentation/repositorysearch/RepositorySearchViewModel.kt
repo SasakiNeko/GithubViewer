@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sasaki.githubviewer.di.AppContainer
 import com.sasaki.githubviewer.domain.entity.RepositorySearchResults
 import com.sasaki.githubviewer.domain.usecase.RepositorySearchListener
+import com.sasaki.githubviewer.domain.usecase.SearchQueryGetter
 import com.sasaki.githubviewer.domain.usecase.SearchRepository
 import kotlinx.coroutines.launch
 
@@ -12,7 +13,13 @@ class RepositorySearchViewModel(
     private val listener: RepositorySearchListener,
     private val appContainer: AppContainer?
 ) : ViewModel() {
-    val sortingSpinnerValues = mutableListOf("関連度順", "スター順", "新しい順", "古い順")
+    val sortingSpinnerTitles = mutableListOf("関連度順", "スター順", "新しい順", "古い順")
+    private val searchQueryTypes = mutableListOf(
+        SearchQueryGetter.QueryType.MATCH,
+        SearchQueryGetter.QueryType.STARS,
+        SearchQueryGetter.QueryType.NEWEST,
+        SearchQueryGetter.QueryType.OLDEST
+    )
 
     /** 検索可能かを表すフラグ */
     var isSearchEnabledFlag = true
@@ -26,23 +33,24 @@ class RepositorySearchViewModel(
      * リポジトリを名前から検索する
      *
      * @param name リポジトリ名
-     * @param after カーソル
+     * @param selectedSpinnerPosition スピナーの選択されているポジション
      */
-    fun searchRepository(name: String) {
+    fun searchRepository(name: String, selectedSpinnerPosition: Int) {
+        val queryType = searchQueryTypes.getOrElse(selectedSpinnerPosition) { SearchQueryGetter.QueryType.MATCH }
         viewModelScope.launch {
-            searchRepositoryUseCase?.searchRepository(name)
+            searchRepositoryUseCase?.searchRepository(name, queryType)
         }
     }
 
-    fun searchAdditionalRepository() {
+    /**
+     * カーソルを使い追加でデータの読み込みをおこなう
+     *
+     * @param selectedSpinnerPosition スピナーの選択されているポジション
+     */
+    fun searchAdditionalRepository(selectedSpinnerPosition: Int) {
+        val queryType = searchQueryTypes.getOrElse(selectedSpinnerPosition) { SearchQueryGetter.QueryType.MATCH }
         viewModelScope.launch {
-            searchRepositoryUseCase?.searchAdditionalRepository()
-        }
-    }
-
-    fun searchRepositoryInStarsOrder(name: String, after: String?) {
-        viewModelScope.launch {
-            searchRepositoryUseCase?.searchRepositoryInStarsOrder(name, after)
+            searchRepositoryUseCase?.searchAdditionalRepository(queryType)
         }
     }
 }

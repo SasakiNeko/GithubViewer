@@ -28,6 +28,10 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
     lateinit var binding: FragmentRepositorySearchBinding
     lateinit var sortingSpinner: Spinner
     private var scroller: RecyclerViewScroller? = null
+    private val sortingSpinnerSelectedPosition: Int
+        get() = binding.sortingSpinner.selectedItemPosition
+    private val searchViewQuery: String
+        get() = binding.searchView.query.toString()
 
     private val viewModel: RepositorySearchViewModel by viewModels {
         object : ViewModelProvider.Factory {
@@ -62,6 +66,7 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
         setupRepositoryAdapter()
         setSortingSpinnerValues()
         setupSearchView()
+        setSortingSpinnerListener()
 
         return binding.root
     }
@@ -71,22 +76,14 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
             ArrayAdapter(
                 it,
                 R.layout.support_simple_spinner_dropdown_item,
-                viewModel.sortingSpinnerValues
+                viewModel.sortingSpinnerTitles
             )
         }
     }
 
     private fun setSortingSpinnerListener() {
         sortingSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
-                override fun onItemClick(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-
-                }
+            object : AdapterView.OnItemSelectedListener {
 
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -94,6 +91,7 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
                     position: Int,
                     id: Long
                 ) {
+                    if (searchViewQuery.isNotBlank()) viewModel.searchRepository(searchViewQuery, sortingSpinnerSelectedPosition)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -105,7 +103,7 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!viewModel.isSearchEnabledFlag) return false
                 val unwrapQuery = query ?: return false
-                viewModel.searchRepository(unwrapQuery)
+                viewModel.searchRepository(unwrapQuery, sortingSpinnerSelectedPosition)
                 viewModel.isSearchEnabledFlag = false
                 return true
             }
@@ -121,7 +119,7 @@ class RepositorySearchFragment : Fragment(), RepositorySearchListener {
         val linearLayoutManager = LinearLayoutManager(unwrapContext)
         val scroller = object : RecyclerViewScroller(linearLayoutManager) {
             override fun reachBottomOfList() {
-                viewModel.searchAdditionalRepository()
+                viewModel.searchAdditionalRepository(sortingSpinnerSelectedPosition)
             }
         }
         this.scroller = scroller

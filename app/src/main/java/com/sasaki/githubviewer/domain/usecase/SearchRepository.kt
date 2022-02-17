@@ -10,11 +10,18 @@ interface RepositorySearchListener {
 
 class SearchRepository(private val dataAccessor: SearchRepositoryDataAccessor, private val listener: RepositorySearchListener) {
     /** 検索文字列 */
-    var searchName: String? = null
-    var cursor: String? = null
+    private var searchName: String? = null
+    private var cursor: String? = null
+    private var searchQueryGetter = SearchQueryGetter()
 
-    suspend fun searchRepository(name: String) {
-        val query = "$name in:name"
+    /**
+     * リポジトリを名前から検索する
+     *
+     * @param name リポジトリ名
+     * @param queryType クエリのタイプ
+     */
+    suspend fun searchRepository(name: String, queryType: SearchQueryGetter.QueryType) {
+        val query = searchQueryGetter.getQuery(name, queryType)
         val result = dataAccessor.searchRepository(query)
 
         listener.notifyNewSearchRepositoryResult(result)
@@ -25,22 +32,14 @@ class SearchRepository(private val dataAccessor: SearchRepositoryDataAccessor, p
     /**
      * カーソルを使い追加でデータの読み込みをおこなう
      *
+     * @param queryType クエリのタイプ
      */
-    suspend fun searchAdditionalRepository() {
+    suspend fun searchAdditionalRepository(queryType: SearchQueryGetter.QueryType) {
         val unwrapSearchName = searchName ?: return
-        val query = "$unwrapSearchName in:name"
-        val result = dataAccessor.searchRepository(query)
+        val query = searchQueryGetter.getQuery(unwrapSearchName, queryType)
+        val result = dataAccessor.searchRepository(query, cursor)
 
         listener.notifyAdditionalSearchRepositoryResult(result)
-        setCursor(result)
-    }
-
-    suspend fun searchRepositoryInStarsOrder(name: String, after: String?) {
-        val query = "$name in:name sort:stars"
-        val result = dataAccessor.searchRepository(query, after)
-
-        listener.notifyNewSearchRepositoryResult(result)
-        searchName = name
         setCursor(result)
     }
 
