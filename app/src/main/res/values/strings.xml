@@ -9,4 +9,17 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  bottom menu  -->
+    <string name="repository_search_bottom_menu">リポジトリ検索</string>
+    <string name="source_view_bottom_menu">ソース閲覧</string>
+    <string name="issue_view_bottom_menu">issue閲覧</string>
+    <string name="notification_list_bottom_menu">通知一覧</string>
+
+    <!--  fragment details  -->
+    <string name="stars">stars: %d</string>
+    <string name="watching">watching: %d</string>
+    <string name="forks">forks: %d</string>
 </resources>
