@@ -27,7 +27,10 @@ class SearchRepositoryStore {
                 RepositoryInfo(
                     it?.cursor,
                     it?.node?.onRepository?.nameWithOwner,
-                    it?.node?.onRepository?.url as? String
+                    it?.node?.onRepository?.url as? String,
+                    it?.node?.onRepository?.stargazerCount,
+                    it?.node?.onRepository?.forkCount,
+                    it?.node?.onRepository?.watchers?.totalCount,
                 )
             }
 

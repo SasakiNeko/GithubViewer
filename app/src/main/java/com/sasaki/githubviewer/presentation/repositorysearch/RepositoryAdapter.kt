@@ -1,6 +1,5 @@
 package com.sasaki.githubviewer.presentation.repositorysearch
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,22 +10,15 @@ import com.sasaki.githubviewer.domain.entity.RepositoryInfo
 
 class RepositoryAdapter(
     private val context: Context,
-    private var repositoryInfo: MutableList<RepositoryInfo>,
+    var repositoryInfo: MutableList<RepositoryInfo>,
+    private val listener: OnClickItemListener,
 ) : RecyclerView.Adapter<RepositoryAdapter.ViewHolder>() {
 
-    lateinit var binding: ItemRepositoryBinding
-
-    /**
-     * リポジトリデータを設定する
-     *
-     * @param repositoryInfo List<RepositoryInfo>?
-     */
-    fun setRepositoryInfo(repositoryInfo: List<RepositoryInfo>?) {
-        val unwrapRepositoryInfo = repositoryInfo ?: return
-        this.repositoryInfo = unwrapRepositoryInfo.toMutableList()
-        // 全データを更新するためnotifyDataSetChangedを使用する
-        notifyDataSetChanged()
+    interface OnClickItemListener {
+        fun notifyClickAdapterItem(repositoryInfo: RepositoryInfo)
     }
+
+    lateinit var binding: ItemRepositoryBinding
 
     /**
      * リポジトリデータを追加する
@@ -51,11 +43,18 @@ class RepositoryAdapter(
         val data = repositoryInfo[position]
         val nameWithOwner = data.nameWithOwner ?: return
         holder.setItemName(nameWithOwner)
+        holder.binding.repositoryItem.setOnClickListener {
+            listener.notifyClickAdapterItem(repositoryInfo[position])
+        }
     }
 
     override fun getItemCount(): Int = repositoryInfo.size
 
-    class ViewHolder(val view: View, val binding: ItemRepositoryBinding) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(
+        val view: View,
+        val binding: ItemRepositoryBinding,
+    ) : RecyclerView.ViewHolder(view) {
+
         fun setItemName(name: String) {
             binding.itemName.text = name
         }

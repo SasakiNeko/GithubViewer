@@ -8,5 +8,8 @@ data class RepositorySearchResults (
 data class RepositoryInfo(
     val cursor: String?,
     val nameWithOwner: String?,
-    val url: String?
+    val url: String?,
+    val stargazerCount: Int?,
+    val forkCount: Int?,
+    val watchingCount: Int?
 )

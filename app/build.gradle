@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.apollographql.apollo3' version '3.0.0'
+    id 'com.google.secrets_gradle_plugin' version '0.6'
 }
 
 android {

@@ -17,4 +17,9 @@
     <string name="source_view_bottom_menu">ソース閲覧</string>
     <string name="issue_view_bottom_menu">issue閲覧</string>
     <string name="notification_list_bottom_menu">通知一覧</string>
+
+    <!--  fragment details  -->
+    <string name="stars">stars: %d</string>
+    <string name="watching">watching: %d</string>
+    <string name="forks">forks: %d</string>
 </resources>

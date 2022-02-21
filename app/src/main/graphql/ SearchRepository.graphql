@@ -8,6 +8,11 @@ query SearchRepository($repositoryName: String!, $after: String) {
                 ... on Repository {
                     nameWithOwner
                     url
+                    stargazerCount
+                    forkCount
+                    watchers {
+                        totalCount
+                    }
                 }
             }
         }

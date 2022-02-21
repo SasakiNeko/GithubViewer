@@ -3,6 +3,7 @@ package com.sasaki.githubviewer.presentation.repositorysearch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sasaki.githubviewer.di.AppContainer
+import com.sasaki.githubviewer.domain.entity.RepositoryInfo
 import com.sasaki.githubviewer.domain.entity.RepositorySearchResults
 import com.sasaki.githubviewer.domain.usecase.RepositorySearchListener
 import com.sasaki.githubviewer.domain.usecase.SearchQueryGetter
@@ -23,6 +24,10 @@ class RepositorySearchViewModel(
 
     /** 検索可能かを表すフラグ */
     var isSearchEnabledFlag = true
+
+    var repositoryInfo: MutableList<RepositoryInfo> = mutableListOf()
+
+    var prevSpinnerPosition: Int = 0
 
     private val searchRepositoryUseCase: SearchRepository? by lazy {
         val unwrapAppContainer = appContainer ?: return@lazy null

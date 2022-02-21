@@ -7,8 +7,7 @@
         android:layout_height="match_parent">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/RepositorySearchFragment"
-            android:name="com.sasaki.githubviewer.presentation.repositorysearch.RepositorySearchFragment"
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
