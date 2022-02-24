@@ -1,6 +1,5 @@
 package com.sasaki.githubviewer.infra.remotestore
 
-import android.content.Context
 import com.apollographql.apollo3.api.Optional
 import com.sasaki.githubviewer.SearchRepositoryQuery
 import com.sasaki.githubviewer.infra.Apollo
@@ -21,23 +20,33 @@ class SearchRepositoryStore {
      */
     suspend fun searchRepository(name: String, after: String? = null): RepositorySearchResults {
         return withContext(Dispatchers.IO) {
-            val response = apolloClient.query(SearchRepositoryQuery(name, Optional.Present(after))).execute()
-            val data = response.data?.search
-            val repositoryInfoList = data?.edges?.map {
-                RepositoryInfo(
-                    it?.cursor,
-                    it?.node?.onRepository?.nameWithOwner,
-                    it?.node?.onRepository?.url as? String,
-                    it?.node?.onRepository?.stargazerCount,
-                    it?.node?.onRepository?.forkCount,
-                    it?.node?.onRepository?.watchers?.totalCount,
-                )
-            }
+            try {
+                val response = apolloClient.query(SearchRepositoryQuery(name, Optional.Present(after))).execute()
+                val errors = response.errors
 
-            RepositorySearchResults(
-                data?.repositoryCount ?: 0,
-                repositoryInfoList
-            )
+                if (errors != null && errors.isNotEmpty()) {
+                    return@withContext RepositorySearchResults(0, null)
+                }
+
+                val searchResults = response.data?.search
+                val repositoryInfoList = searchResults?.edges?.map {
+                    RepositoryInfo(
+                        it?.cursor,
+                        it?.node?.onRepository?.nameWithOwner,
+                        it?.node?.onRepository?.url as? String,
+                        it?.node?.onRepository?.stargazerCount,
+                        it?.node?.onRepository?.forkCount,
+                        it?.node?.onRepository?.watchers?.totalCount,
+                    )
+                }
+
+                return@withContext RepositorySearchResults(
+                    searchResults?.repositoryCount ?: 0,
+                    repositoryInfoList
+                )
+            } catch (e: Exception) {
+                return@withContext RepositorySearchResults(0, null)
+            }
         }
     }
 }
