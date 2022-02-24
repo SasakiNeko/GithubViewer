@@ -1,6 +1,5 @@
 package com.sasaki.githubviewer.infra.remotestore
 
-import android.content.Context
 import com.apollographql.apollo3.api.Optional
 import com.sasaki.githubviewer.SearchRepositoryQuery
 import com.sasaki.githubviewer.infra.Apollo
