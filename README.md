@@ -26,7 +26,17 @@ Githubのビューアー
 ## AndroidStudio
 バージョン: 4.1.1
 
-## SDK version
+## ビルド方法について
+アプリ内ではgithubトークンを使用することになるためトークンを生成し、
+local.propertiesないにgithub_tokenというプロパティ名で保存すること。
+
+```
+// local.properties
+例) github_token="ghp_000000111aaaabbbb"
+```
+
+※tokenの生成方法については以下を参照
+https://docs.github.com/ja/graphql/guides/forming-calls-with-graphql#authenticating-with-graphql
 
 ## 計画シート(ガントチャート)
 https://docs.google.com/spreadsheets/d/1Iyg9MqOpbCB-M9I8xl_eK_Hl_6-cenEaF3P9i4T_fzA/edit#gid=939584517
