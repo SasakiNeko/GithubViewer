@@ -7,12 +7,14 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.sasaki.githubviewer.R
 import com.sasaki.githubviewer.databinding.ActivityMainBinding
-import com.sasaki.githubviewer.presentation.issue.IssueSearchFragment
+import com.sasaki.githubviewer.presentation.issuesearch.IssueDetailFragment
+import com.sasaki.githubviewer.presentation.issuesearch.IssueSearchFragment
 import com.sasaki.githubviewer.presentation.repositorysearch.RepositoryDetailFragment
 import com.sasaki.githubviewer.presentation.repositorysearch.RepositorySearchFragment
 import com.sasaki.githubviewer.presentation.repositorysearch.SerializableRepositoryInfo
 
-class MainActivity : AppCompatActivity(), RepositorySearchFragment.OnRepositoryItemClickListener {
+class MainActivity : AppCompatActivity(), RepositorySearchFragment.OnRepositoryItemClickListener,
+    IssueSearchFragment.OnIssueItemClickListener {
 
     lateinit var binding: ActivityMainBinding
 
@@ -52,7 +54,7 @@ class MainActivity : AppCompatActivity(), RepositorySearchFragment.OnRepositoryI
     private fun setupBottomView() {
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.action_repository_search -> {
                     replaceFragment(RepositorySearchFragment.newInstance())
                     true
@@ -78,5 +80,19 @@ class MainActivity : AppCompatActivity(), RepositorySearchFragment.OnRepositoryI
             }
         }
         replaceFragment(repositoryDetailFragment)
+    }
+
+    override fun notifyIssueItemClick(ownerName: String, repositoryName: String, issueNumber: Int) {
+        val issueDetailFragment = IssueDetailFragment.newInstance().apply {
+            arguments = Bundle().apply {
+                putString(IssueDetailFragment.OWNER_NAME, ownerName)
+                putString(IssueDetailFragment.REPOSITORY_NAME, repositoryName)
+                putInt(
+                    IssueDetailFragment.ISSUE_NUMBER,
+                    issueNumber
+                )
+            }
+        }
+        replaceFragment(issueDetailFragment)
     }
 }

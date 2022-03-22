@@ -22,4 +22,9 @@
     <string name="stars">stars: %d</string>
     <string name="watching">watching: %d</string>
     <string name="forks">forks: %d</string>
+
+    <!--  fragment issue search  -->
+    <string name="owner">オーナー: </string>
+    <string name="repository">リポジトリ: </string>
+    <string name="search_button">検索</string>
 </resources>

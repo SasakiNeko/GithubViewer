@@ -1,18 +1,11 @@
 query SearchIssue($owner: String!, $name: String!, $issueState: [IssueState!]!, $after: String) {
     repository(owner: $owner, name: $name) {
         issues(first: 30, states: $issueState, orderBy: {direction: DESC, field: CREATED_AT}, after: $after) {
-            nodes {
-                title
-                bodyText
-                timelineItems(first: 10, itemTypes: ISSUE_COMMENT) {
-                    edges {
-                        cursor
-                        node {
-                            ... on IssueComment {
-                                bodyText
-                            }
-                        }
-                    }
+            edges {
+                cursor
+                node {
+                    title
+                    number
                 }
             }
         }

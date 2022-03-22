@@ -1,0 +1,21 @@
+query SearchIssueTimeline($owner: String!, $name: String!, $number: Int!, $after: String) {
+    repository(owner: $owner, name: $name) {
+        issue(number: $number) {
+            title
+            bodyHTML
+            timelineItems(first: 10, itemTypes: ISSUE_COMMENT, after: $after) {
+                edges {
+                    cursor
+                    node {
+                        ... on IssueComment {
+                            author {
+                                login
+                            }
+                            bodyHTML
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
